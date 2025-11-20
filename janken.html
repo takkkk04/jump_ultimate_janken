@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ジャンプアルティメットじゃんけん</title>
+  <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP" rel="stylesheet" />
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <main>
+
+    <section class="title_area">
+      <img src="janken.img/jump_logo.webp" alt="" class="title_logo">
+      <h1>ジャンプアルティメットジャンケン</h1>
+    </section>
+
+    <div class="enemy_area">
+      <p class="kate">勝て！</p>
+      <div class="enemy_box">
+        <img src="janken.img/enel_main.png" alt="" class="enemy_img" >
+      </div>
+    </div>
+
+    <section class="janken_btn">
+      <p class="result_message">じゃん…けん……</p>
+      <div class="hand_btn_box">
+        <button class="hand_btn" data-hand="gu">グー</button>
+        <button class="hand_btn" data-hand="choki">チョキ</button>
+        <button class="hand_btn" data-hand="pa">パー</button>
+      </div>
+    </section>
+
+    <section class="retry_area">
+      <button class="retry_btn">もう一度！</button>
+    </section>
+
+  </main>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script>
+    $(function(){
+      //通常時、敵が4パターンある
+      const enemies = [
+        {
+          name : "enel",
+          main : "janken.img/enel_main.png",
+          win : "janken.img/enel_make.webp",
+          aiko : "janken.img/enel_aiko_2.png",
+          lose_images : [
+            "janken.img/enel_gu.jpg",
+            "janken.img/enel_choki.jpg",
+            "janken.img/enel_pa.jpg"
+          ]},
+        {
+          name : "freeza",
+          main : "janken.img/freeza_main.png",
+          win : "janken.img/freeza_make.jpg",
+          aiko : "janken.img/freeza_aiko.jpg",
+          lose_images : [
+            "janken.img/freeza_gu.jpg",
+            "janken.img/freeza_choki.jpg",
+            "janken.img/freeza_pa.webp"
+          ]},
+        {
+          name : "retu",
+          main : "janken.img/retu_main.jpg",
+          win : "janken.img/retu_make.jpg",
+          aiko : "janken.img/retu:kamawan.jpg",
+          lose_images : [
+            "janken.img/retu_gu.webp",
+            "janken.img/retu_choki.jpg",
+            "janken.img/retu_pa.jpg"
+          ]},
+        {
+          name : "pito",
+          main : "janken.img/pito_main.jpg",
+          win : "janken.img/pito_make.jpg",
+          aiko : "janken.img/pito_aiko.jpg",
+          lose_images : [
+            "janken.img/pito_gu.jpg",
+            "janken.img/pito_choki.jpg",
+            "janken.img/pito_pa.jpg"
+        ]}];
+
+      //最初の敵をエネルに固定、後から変えられる
+      let current_enemy_index = 0;
+      $(".enemy_img").attr("src", enemies[current_enemy_index].main);
+
+      //通常時、ラッシュ予告画面false状態
+      let rush_wait = false;
+
+      //通常時、ラッシュfalse状態
+      let rush_mode = false;
+
+      let rush_enemy_index = 0;
+      //負けルートfalse状態
+      let rush_lose_mode = false;
+
+      //ラッシュコンボカウンター
+      let rush_combo = 0;
+
+      //ラッシュ中画像群
+      const rush_enemy_img = [
+        "janken.img/lush_zako_hokuto.jpg",
+        "janken.img/lush_zako_baki.jpg",
+        "janken.img/lush_zako_bleach.jpg",
+        "janken.img/lush_zako_chain.jpg",
+        "janken.img/lush_zako_db.jpg",
+        "janken.img/lush_zako_heroaca.webp",
+        "janken.img/lush_zako_jojo.webp",
+        "janken.img/lush_zako_onepiece.jpg"
+      ];
+      const rush_win_img = [
+        "janken.img/lush_win_bleach.jpg",
+        "janken.img/lush_win_chain.jpeg",
+        "janken.img/lush_win_db.jpg",
+        "janken.img/lush_win_deku.jpg",
+        "janken.img/lush_win_hokuto.jpg",
+        "janken.img/lush_win_jojo.png",
+        "janken.img/lush_win_naruto.png",
+        "janken.img/lush_win_onepan.png",
+        "janken.img/lush_win_onepi.jpg"
+      ];
+      const rush_lose_img = {
+        main: "janken.img/kakuhen_end.jpeg",
+        lose: "janken.img/kobi_mottainai_2.jpg"
+      };
+
+      $(".hand_btn").on("click", function(){
+        //押したボタンの取得
+        const player_hand = $(this).data("hand");
+          console.log("押したボタン→" + player_hand);
+
+        //始めにラッシュ中か否かの処理
+        if (rush_mode){
+          //ラッシュ中かつ負けルートじゃないとき、必勝（8/9）
+          if (!rush_lose_mode){
+            const rush_win_index =Math.floor(Math.random() * rush_win_img.length);
+            $(".enemy_img").attr("src",rush_win_img[rush_win_index]);
+            rush_combo++;
+            $(".result_message").text(rush_combo + "コンボ！");
+            $(".retry_btn").text("ラッシュ継続！");
+            $(".retry_btn").removeClass("rainbow_btn");
+            $(".retry_area").show();
+            $(".hand_btn").hide();
+            $(".kate").text("君の勝ちだ！");            
+          //ラッシュ中かつ負けルートに入った時、必敗（1/9）
+          }else {
+            $(".enemy_img").attr("src",rush_lose_img.lose);
+            $(".result_message").text( "最終結果 : " + rush_combo +"コンボ！");
+            $(".retry_btn").text("はじめから遊ぶ");
+            $(".retry_area").show();
+            $(".hand_btn").hide();
+            $(".kate").text("アルティメットラッシュ終了…");
+            rush_mode = false;
+            rush_combo = 0;
+          }
+          return;
+        }
+
+        //配列グーチョキパー
+        const hands = ["gu", "choki", "pa"];
+        //敵の手ランダムで3個取得,グーチョキパーに変換
+        const enemy_hand = hands[Math.floor(Math.random()*3)];
+          console.log("敵の手" + enemy_hand);
+        //勝敗
+        let result;
+        if (player_hand === enemy_hand){
+          result = "aiko";
+        } else if(
+          (player_hand === "gu" && enemy_hand === "choki")||
+          (player_hand === "choki" && enemy_hand === "pa")||
+          (player_hand === "pa" && enemy_hand === "gu")
+        ){
+          result = "win";
+        } else {
+          result = "lose";
+        }
+        console.log("結果" + result);
+
+        //画像の切り替え
+        const current_enemy = enemies [current_enemy_index];
+
+        if (result === "win"){
+          //ピトー勝利時のみ、ラッシュtrueに
+          if (current_enemy.name === "pito"){
+            rush_wait = true;
+          }
+          $(".enemy_img").attr("src", current_enemy.win);
+          $(".result_message").text("勝ち！");
+          //ボタンの書き換え
+          $(".retry_btn").text("次のバトル！")
+          $(".retry_area").show();
+          $(".hand_btn").hide();
+          $(".kate").text("君の勝ちだ！")
+
+
+        } else if (result === "aiko"){
+          $(".enemy_img").attr("src", current_enemy.aiko);
+          $(".result_message").text("あいこ！");
+          $(".retry_area").hide();
+          $(".kate").text("まだだ！")
+        } else {
+          //負け画像３枚を用意、const aaa = [bbb, ccc, ddd];
+          const lose_images = current_enemy.lose_images
+          //負け画像をランダムで３枚の中から選ぶ、*lengthはデータの数で勝手に変わって便利
+          const random_lose_img = lose_images[ Math.floor(Math.random()* lose_images.length)];
+          $(".enemy_img").attr("src", random_lose_img);
+          //もう一度ボタンを出す、グーチョキパーを消す、
+          $(".result_message").text("負け…");
+          $(".retry_btn").text("もう一度！")
+          $(".retry_area").show();
+          $(".hand_btn").hide();
+          $(".kate").text("くそっ！");
+        } 
+      });
+
+      //もう一度ボタンを押した時の動作
+      $(".retry_btn").on ("click", function(){
+
+        //ラッシュ中ラッシュ継続ボタン押したときのみの処理
+        if (rush_mode && $(this).text() === "ラッシュ継続！"){
+          //ラッシュ継続ボタン押した時点で1/9ランダム抽選
+          const lottery = Math.floor(Math.random() * 9);
+          console.log("ラッシュ抽選→" + lottery);
+          if (lottery === 0){
+            //1/9負けルート、負け画像、テキスト
+            rush_lose_mode = true;
+            $(".enemy_img").attr("src",rush_lose_img.main);
+            $(".result_message").text("ざわ…ざわざわ…");
+            $(".retry_area").hide();
+            $(".hand_btn").show();
+            $(".kate").text("誰だ…？")
+            return;
+          } else {
+            //8/9勝ちルート
+            rush_lose_mode = false;
+            rush_enemy_index = Math.floor(Math.random() * rush_enemy_img.length);
+            $(".enemy_img").attr("src",rush_enemy_img[rush_enemy_index]);
+            $(".result_message").text("ラッシュ継続！");      
+            $(".retry_area").hide();
+            $(".hand_btn").show();
+            $(".kate").text("ぶっ飛ばせ！")
+            return;
+          }
+        };
+
+        //始めから遊ぶボタン押した時のみ
+        if ($(this).text() === "はじめから遊ぶ"){
+          rush_mode = false;
+          rush_wait = false;
+          rush_lose_mode = false;
+          current_enemy_index = 0;
+          $(".retry_btn").removeClass("rainbow_btn");
+          $(".enemy_img").attr("src",enemies[current_enemy_index].main);
+          $(".result_message").text("じゃんけん…");
+          $(".retry_area").hide();
+          $(".hand_btn").show();
+          $(".kate").text("勝て！");
+          return;
+        };
+
+        //ラッシュ突入！状態を押した時のみ
+        if ($(this).text() === "ラッシュ突入！"){
+          //確変突入
+          rush_mode = true;
+          rush_combo = 0;
+          //虹色ボタンOFF
+          $(".retry_btn").removeClass("rainbow_btn");
+          rush_enemy_index = Math.floor(Math.random() * rush_enemy_img.length);
+          $(".enemy_img").attr("src",rush_enemy_img[rush_enemy_index]);
+          $(".result_message").text("アルティメットラッシュスタート！");      
+          $(".retry_area").hide();
+          $(".hand_btn").show();
+          $(".kate").text("ぶっ飛ばせ！");
+          return;
+          };
+
+        //次のバトル！状態のボタンを押した時だけ
+        if ($(this).text() === "次のバトル！"){
+
+          //ピトー勝利時のみラッシュ予告画面に遷移、ラッシュ突入ボタン表示
+          if(rush_wait === true){
+            rush_wait = false;
+            $(".enemy_img").attr("src","janken.img/kakuhen_in.jpg");
+            $(".retry_area").show();
+            $(".result_message").text("よくやった！！")
+            $(".retry_btn").text("ラッシュ突入！")
+            $(".hand_btn").hide();
+            $(".kate").text("ゴゴゴゴゴ…")
+            //ラッシュ突入ボタン虹色クラス
+            $(".retry_btn").addClass("rainbow_btn")
+            return;
+          }
+
+          //敵３パターンの中からランダムひとつ表示
+          current_enemy_index = Math.floor(Math.random() * enemies.length);
+        }else {
+          //もう一度！状態で押した時
+          current_enemy_index = Math.floor(Math.random() * enemies.length);
+        }
+        console.log(enemies);
+        console.log(current_enemy_index);
+
+        //通常時画面に戻す処理
+        $(".enemy_img").attr("src", enemies[current_enemy_index].main);
+        $(".result_message").text("じゃん…けん……");
+        $(".retry_area").hide();
+        $(".hand_btn").show();
+        $(".kate").text("勝て！");
+      });
+    });
+
+  </script>
+</body>
+
+</html>

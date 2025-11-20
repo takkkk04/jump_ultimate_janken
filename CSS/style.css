@@ -1,0 +1,159 @@
+@font-face {
+    font-family: "jump_font";
+    src: url("../fonts/002zouver.2-Regular.ttf");
+}
+@font-face {
+    font-family: "gintama_font";
+    src: url("../fonts/gintama_font.ttf");
+}
+
+.title_area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f00;
+}
+
+.title_logo {
+    width: 90px;
+    height: 90px;
+}
+
+h1 {
+    font-family: "jump_font";
+    font-size: 45px;
+    color: white;
+    text-shadow: 
+        5px 5px 0 #000, 
+        -3px -3px 0 #000,
+        3px -3px 0 #000,
+        -3px 3px 0 #000;
+}
+
+.enemy_area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.kate {
+    text-align: center;
+    font-weight: bold;
+    font-size: 50px;
+    margin: 30px;
+}
+ 
+.enemy_box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 600px;
+    height: 600px;
+    margin-bottom: 30px;
+    overflow: hidden;
+    
+    
+}
+
+.enemy_img {
+    object-fit: contain;
+    max-width: 100%;
+    max-height: 100%;
+    image-rendering: auto;
+    image-rendering: smooth;
+}
+
+.janken_btn {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.hand_btn_box {
+    display: flex;
+    justify-content: center;
+}
+
+.result_message {
+    font-size: 30px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hand_btn {
+    /* ボタンを丸くする */
+    border-radius: 50%;
+    width: 130px;
+    height: 130px;
+    margin: auto 10px;
+    font-family: "jump_font";
+    font-size: 40px;
+    color: white;
+    text-shadow: 
+        4px 4px 0 #000, 
+        -4px -4px 0 #000,
+        4px -4px 0 #000,
+        -4px 4px 0 #000;
+    box-shadow: 0 10px 0 #555;
+    transform: translateY(0);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    cursor: pointer;
+}
+
+.hand_btn:active {
+    transform: translateY(5px);
+    box-shadow: 0 3px 0 #555;
+}
+
+.hand_btn[data-hand="gu"]{
+    background-color: #ff5656;
+}
+.hand_btn[data-hand="choki"]{
+    background-color: #ffff56;
+}
+.hand_btn[data-hand="pa"]{
+    background-color: #5656ff;
+}
+
+.retry_area {
+    display: none;
+    text-align: center;
+}
+
+.retry_btn {
+    width: 250px;
+    height: 60px;
+    font-size: 25px;
+    font-weight: 900;
+    border-radius: 12px;
+    background-color: #ffff56;
+    box-shadow: 0 4px 0 #555;
+    transform: translateY(0);
+    transition: transform 0.05s ease, box-shadow 0.05s ease;
+    cursor: pointer;
+}
+
+.retry_btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 #555;
+}
+
+.rainbow_btn {
+    color: white;
+    background: linear-gradient(
+        45deg,
+        red, orange, yellow, green, cyan, blue, purple, red
+    );
+    background-size: 400%;
+    border: 3px solid gold;
+    box-shadow: 0 0 20px gold;
+    background-size: 300%;
+    animation: rainbow 6s linear infinite;
+}
+
+@keyframes rainbow {
+    0% { background-position: 0% 50%;}
+    100% { background-position: -400% 50%;}
+}

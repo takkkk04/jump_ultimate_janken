@@ -2,6 +2,7 @@
     font-family: "jump_font";
     src: url("../fonts/002zouver.2-Regular.ttf");
 }
+
 @font-face {
     font-family: "gintama_font";
     src: url("../fonts/gintama_font.ttf");
@@ -23,8 +24,8 @@ h1 {
     font-family: "jump_font";
     font-size: 45px;
     color: white;
-    text-shadow: 
-        5px 5px 0 #000, 
+    text-shadow:
+        5px 5px 0 #000,
         -3px -3px 0 #000,
         3px -3px 0 #000,
         -3px 3px 0 #000;
@@ -42,7 +43,7 @@ h1 {
     font-size: 50px;
     margin: 30px;
 }
- 
+
 .enemy_box {
     display: flex;
     justify-content: center;
@@ -51,8 +52,8 @@ h1 {
     height: 600px;
     margin-bottom: 30px;
     overflow: hidden;
-    
-    
+
+
 }
 
 .enemy_img {
@@ -91,8 +92,8 @@ h1 {
     font-family: "jump_font";
     font-size: 40px;
     color: white;
-    text-shadow: 
-        4px 4px 0 #000, 
+    text-shadow:
+        4px 4px 0 #000,
         -4px -4px 0 #000,
         4px -4px 0 #000,
         -4px 4px 0 #000;
@@ -107,13 +108,15 @@ h1 {
     box-shadow: 0 3px 0 #555;
 }
 
-.hand_btn[data-hand="gu"]{
+.hand_btn[data-hand="gu"] {
     background-color: #ff5656;
 }
-.hand_btn[data-hand="choki"]{
+
+.hand_btn[data-hand="choki"] {
     background-color: #ffff56;
 }
-.hand_btn[data-hand="pa"]{
+
+.hand_btn[data-hand="pa"] {
     background-color: #5656ff;
 }
 
@@ -142,10 +145,8 @@ h1 {
 
 .rainbow_btn {
     color: white;
-    background: linear-gradient(
-        45deg,
-        red, orange, yellow, green, cyan, blue, purple, red
-    );
+    background: linear-gradient(45deg,
+            red, orange, yellow, green, cyan, blue, purple, red);
     background-size: 400%;
     border: 3px solid gold;
     box-shadow: 0 0 20px gold;
@@ -154,6 +155,60 @@ h1 {
 }
 
 @keyframes rainbow {
-    0% { background-position: 0% 50%;}
-    100% { background-position: -400% 50%;}
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: -400% 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    body{
+        margin: 0;
+    }
+
+    .title_area{
+        flex-direction: column;
+        padding: 15px 10px;
+    }
+
+    .title_logo{
+        width: 60px;
+        height: 60px;
+    }
+
+    h1{
+        font-size: 24px;
+        text-align: center;
+    }
+
+    .kate{
+        font-size: 26px;
+        margin: 15px 0;
+    }
+
+    .enemy_box{
+        width: 90vw;
+        height: 90vw;
+        margin-bottom: 20px;    
+    }
+
+    .result_message{
+        font-size: 22px;
+        margin-bottom: 12px;
+    }
+
+    .hand_btn_box{
+        align-items: center;
+    }
+
+    .hand_btn{
+        width: 120px;
+        height: 120px;
+        font-size: 33px;
+        margin-top: 10px; ;
+    }
+
 }
